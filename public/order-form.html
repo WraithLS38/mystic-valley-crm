@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystic Valley Farm - Wholesale Order Form</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #2d5a27;
+            --primary-dark: #1e3d1a;
+            --primary-light: #4a8f42;
+            --accent: #d4a574;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --bg-light: #f8f9fa;
+            --text-dark: #333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #e8f5e9 0%, #fff8e1 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        .logo h1 {
+            font-size: 2rem;
+            color: var(--primary-dark);
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .form-section {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+        }
+        
+        .form-section h2 {
+            color: var(--primary-dark);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group label.required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-light);
+        }
+        
+        .delivery-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 1rem;
+            background: #f0f7f0;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .delivery-check.free {
+            background: #e8f5e9;
+        }
+        
+        .delivery-check.paid {
+            background: #fff3e0;
+        }
+        
+        .delivery-check i {
+            font-size: 1.5rem;
+        }
+        
+        .delivery-check.free i { color: var(--success); }
+        .delivery-check.paid i { color: var(--warning); }
+        
+        /* Product Selection */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        
+        .product-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .product-card.selected {
+            border-color: var(--primary);
+            background: #f0f7f0;
+        }
+        
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .product-name {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .product-category {
+            font-size: 0.75rem;
+            color: white;
+            background: var(--primary);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        
+        .product-prices {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+        }
+        
+        .bulk-price {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .size-select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+        
+        .qty-input {
+            width: 70px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        /* Order Summary */
+        .order-summary {
+            position: sticky;
+            top: 1rem;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .discount-badge {
+            background: var(--success);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .free-delivery-badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 0.5rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--text-dark);
+        }
+        
+        .error-message {
+            background: #ffebee;
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .success-message {
+            background: #e8f5e9;
+            color: var(--success);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .success-message h2 {
+            color: var(--primary-dark);
+            margin-bottom: 1rem;
+        }
+        
+        .success-message p {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        .hidden { display: none; }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .form-section { padding: 1rem; }
+            .products-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                <h1>Mystic Valley Farm</h1>
+            </div>
+            <p class="subtitle">Premium Organic Teas - Wholesale Order Form</p>
+        </div>
+        
+        <!-- Error State -->
+        <div id="error-state" class="form-card hidden">
+            <div class="form-section">
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="error-message">Unable to load order form. Please check your link and try again.</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Form -->
+        <div id="order-form-container">
+            <form id="order-form">
+                <!-- Customer Information -->
+                <div class="form-card">
+                    <div class="form-section">
+                        <h2><i class="fas fa-user"></i> Customer Information</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="required">Business Name</label>
+                                <input type="text" name="company" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Contact Name</label>
+                                <input type="text" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Email</label>
+                                <input type="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">Phone</label>
+                                <input type="tel" name="phone" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Shipping Address -->
+                <div class="form-card">
+                    <div class="form-section">
+                        <h2><i class="fas fa-truck"></i> Shipping Address</h2>
+                        <div class="form-grid">
+                            <div class="form-group" style="grid-column: 1/-1;">
+                                <label class="required">Street Address</label>
+                                <input type="text" name="address" id="shipping-address" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">City</label>
+                                <input type="text" name="city" id="shipping-city" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="required">State</label>
+                                <input type="text" name="state" id="shipping-state" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ZIP Code</label>
+                                <input type="text" name="zip" id="shipping-zip">
+                            </div>
+                        </div>
+                        
+                        <div id="delivery-info" class="delivery-check hidden">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong id="delivery-status">Checking delivery availability...</strong>
+                                <p id="delivery-details"></p>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-secondary" id="check-delivery-btn" style="margin-top: 1rem;">
+                            <i class="fas fa-map-marker-alt"></i> Check Delivery Zone
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Products -->
+                <div class="form-card">
+                    <div class="form-section">
+                        <h2><i class="fas fa-shopping-bag"></i> Select Products</h2>
+                        <p style="margin-bottom: 1rem; color: #666;">Choose your teas and quantities. Prices shown are retail SRP - your wholesale discount will be applied at checkout.</p>
+                        
+                        <div id="products-container" class="products-grid"></div>
+                    </div>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="form-card">
+                    <div class="form-section">
+                        <h2><i class="fas fa-receipt"></i> Order Summary</h2>
+                        <div id="order-items"></div>
+                        
+                        <div class="summary-item">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Your Discount</span>
+                            <span><span id="discount-percent">25%</span> <span class="discount-badge">Wholesale</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Discount Amount</span>
+                            <span id="discount-amount">-$0.00</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Shipping</span>
+                            <span id="shipping-cost">Calculated at delivery check</span>
+                        </div>
+                        <div class="summary-item summary-total">
+                            <span>Total</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                        
+                        <div id="free-delivery-banner" class="free-delivery-badge hidden">
+                            <i class="fas fa-truck"></i> FREE DELIVERY!
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 1rem;">
+                            <label>Order Notes (optional)</label>
+                            <textarea name="notes" rows="2" placeholder="Special requests, delivery instructions, etc."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" id="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Submit Order
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Success State -->
+        <div id="success-state" class="form-card hidden">
+            <div class="form-section">
+                <div class="success-message">
+                    <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--success); margin-bottom: 1rem;"></i>
+                    <h2>Order Submitted!</h2>
+                    <p>Your order has been received and will be processed shortly.</p>
+                    <p><strong>Order Number: <span id="order-number"></span></strong></p>
+                    <p style="margin-top: 1rem;">You'll receive a confirmation email at <span id="confirmation-email"></span></p>
+                    <p style="margin-top: 1rem; color: #888; font-size: 0.9rem;">
+                        Questions? Contact Steven Scott at 707-690-2040 or steven@themysticvalleyfarm.com
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // API Base URL - Same origin (works with Render deployment)
+        const API_URL = '/api';
+        let formCode = null;
+        let formData = null;
+        let products = {};
+        let deliveryInfo = { freeDelivery: false, distance: null };
+        let orderItems = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Get form code from URL
+            const params = new URLSearchParams(window.location.search);
+            formCode = params.get('code');
+            
+            if (!formCode) {
+                showError('No order form code provided. Please use the link provided to you.');
+                return;
+            }
+            
+            await loadForm();
+            await loadProducts();
+            initEventListeners();
+        });
+        
+        async function loadForm() {
+            try {
+                const response = await fetch(`${API_URL}/order-forms/${formCode}`);
+                if (!response.ok) throw new Error('Form not found');
+                
+                formData = await response.json();
+                
+                // Pre-fill customer info if available
+                if (formData.leadInfo) {
+                    document.querySelector('[name="company"]').value = formData.leadInfo.company || '';
+                    document.querySelector('[name="name"]').value = formData.leadInfo.name || '';
+                    document.querySelector('[name="email"]').value = formData.leadInfo.email || '';
+                    document.querySelector('[name="phone"]').value = formData.leadInfo.phone || '';
+                }
+            } catch (error) {
+                showError('This order form is invalid or has expired. Please contact us for a new link.');
+            }
+        }
+        
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products`);
+                const data = await response.json();
+                products = data.products;
+                renderProducts();
+            } catch (error) {
+                showError('Failed to load products. Please try again later.');
+            }
+        }
+        
+        let bulkItems = [];
+        const BULK_DISCOUNT_TIERS = {
+            2: 0.25,   // 2 lbs = 25% off
+            3: 0.30,   // 3-4 lbs = 30% off
+            5: 0.35,   // 5 lbs = 35% off
+            6: 0.40    // 6+ lbs = 40% off
+        };
+        
+        function getBulkDiscount(lbs) {
+            if (lbs >= 6) return 0.40;
+            if (lbs >= 5) return 0.35;
+            if (lbs >= 3) return 0.30;
+            if (lbs >= 2) return 0.25;
+            return 0;
+        }
+        
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            const categories = [
+                { key: 'blackTeas', name: 'Black Tea' },
+                { key: 'greenTeas', name: 'Green Tea' },
+                { key: 'oolongTeas', name: 'Oolong Tea' },
+                { key: 'whiteTeas', name: 'White Tea' },
+                { key: 'herbalTeas', name: 'Herbal Tea' }
+            ];
+            
+            let html = '';
+            categories.forEach(cat => {
+                if (products[cat.key]) {
+                    products[cat.key].forEach((product, idx) => {
+                        const id = `${cat.key}-${idx}`;
+                        const bulkPrice = product.bulkPricePerLb || 45;
+                        html += `
+                            <div class="product-card" data-id="${id}">
+                                <div class="product-header">
+                                    <span class="product-name">${product.name}</span>
+                                    <span class="product-category">${cat.name}</span>
+                                </div>
+                                <div class="product-prices">
+                                    <span>Small: $${product.smallPrice.toFixed(2)}</span>
+                                    <span>Large: $${product.largePrice.toFixed(2)}</span>
+                                    <span class="bulk-price">Bulk: $${bulkPrice.toFixed(2)}/lb</span>
+                                </div>
+                                <div class="product-actions">
+                                    <select class="size-select" data-id="${id}">
+                                        <option value="small">Small</option>
+                                        <option value="large">Large</option>
+                                        <option value="bulk">Bulk (lbs)</option>
+                                    </select>
+                                    <input type="number" class="qty-input" data-id="${id}" placeholder="Qty" min="0" value="0" step="0.5">
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            });
+            
+            container.innerHTML = html;
+            
+            // Add event listeners
+            document.querySelectorAll('.qty-input').forEach(input => {
+                input.addEventListener('input', updateOrder);
+            });
+            document.querySelectorAll('.size-select').forEach(select => {
+                select.addEventListener('change', updateOrder);
+            });
+        }
+        
+        function initEventListeners() {
+            document.getElementById('check-delivery-btn').addEventListener('click', checkDelivery);
+            document.getElementById('order-form').addEventListener('submit', submitOrder);
+        }
+        
+        async function checkDelivery() {
+            const address = document.getElementById('shipping-address').value;
+            const city = document.getElementById('shipping-city').value;
+            const state = document.getElementById('shipping-state').value;
+            const zip = document.getElementById('shipping-zip').value;
+            
+            if (!address || !city || !state) {
+                alert('Please fill in your shipping address first.');
+                return;
+            }
+            
+            const btn = document.getElementById('check-delivery-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading"></span> Checking...';
+            
+            try {
+                const response = await fetch(`${API_URL}/check-delivery`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ address, city, state, zip })
+                });
+                
+                deliveryInfo = await response.json();
+                
+                const infoDiv = document.getElementById('delivery-info');
+                const statusEl = document.getElementById('delivery-status');
+                const detailsEl = document.getElementById('delivery-details');
+                
+                infoDiv.classList.remove('hidden', 'free', 'paid');
+                
+                if (deliveryInfo.freeDelivery) {
+                    infoDiv.classList.add('free');
+                    statusEl.textContent = 'FREE DELIVERY!';
+                    detailsEl.textContent = `You're ${deliveryInfo.distance} miles from Rogue River - within our free delivery zone!`;
+                    document.getElementById('free-delivery-banner').classList.remove('hidden');
+                    document.getElementById('shipping-cost').textContent = '$0.00 (FREE)';
+                } else if (deliveryInfo.distance) {
+                    infoDiv.classList.add('paid');
+                    statusEl.textContent = 'Delivery Available';
+                    detailsEl.textContent = `You're ${deliveryInfo.distance} miles from Rogue River, OR (free delivery within 60 miles).`;
+                    document.getElementById('free-delivery-banner').classList.add('hidden');
+                    document.getElementById('shipping-cost').textContent = 'To be calculated';
+                } else {
+                    statusEl.textContent = 'Delivery Info';
+                    detailsEl.textContent = deliveryInfo.error || 'Unable to calculate distance. Shipping will be calculated manually.';
+                }
+                
+                updateOrder();
+            } catch (error) {
+                alert('Failed to check delivery zone. Please try again.');
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-map-marker-alt"></i> Check Delivery Zone';
+        }
+        
+        function updateOrder() {
+            orderItems = [];
+            bulkItems = [];
+            let subtotal = 0;
+            let bulkSubtotal = 0;
+            let totalBulkLbs = 0;
+            
+            document.querySelectorAll('.qty-input').forEach(input => {
+                const qty = parseFloat(input.value) || 0;
+                if (qty > 0) {
+                    const id = input.dataset.id;
+                    const size = document.querySelector(`.size-select[data-id="${id}"]`).value;
+                    const card = document.querySelector(`.product-card[data-id="${id}"]`);
+                    const name = card.querySelector('.product-name').textContent;
+                    
+                    // Find product in data
+                    let price = 0;
+                    let smallPrice = 0;
+                    let largePrice = 0;
+                    let bulkPricePerLb = 45;
+                    for (const cat of Object.values(products)) {
+                        const product = cat.find(p => p.name === name);
+                        if (product) {
+                            smallPrice = product.smallPrice;
+                            largePrice = product.largePrice;
+                            bulkPricePerLb = product.bulkPricePerLb || 45;
+                            if (size === 'bulk') {
+                                price = bulkPricePerLb;
+                            } else {
+                                price = size === 'large' ? largePrice : smallPrice;
+                            }
+                            break;
+                        }
+                    }
+                    
+                    const itemTotal = price * qty;
+                    
+                    if (size === 'bulk') {
+                        // Bulk items - track separately for bulk discount
+                        bulkSubtotal += itemTotal;
+                        totalBulkLbs += qty;
+                        bulkItems.push({
+                            name,
+                            size: 'bulk',
+                            quantity: qty,
+                            bulkPricePerLb,
+                            price,
+                            total: itemTotal
+                        });
+                    } else {
+                        // Case items
+                        subtotal += itemTotal;
+                        orderItems.push({
+                            name,
+                            size,
+                            quantity: qty,
+                            smallPrice,
+                            largePrice,
+                            price,
+                            total: itemTotal
+                        });
+                    }
+                    
+                    card.classList.add('selected');
+                } else {
+                    document.querySelector(`.product-card[data-id="${input.dataset.id}"]`).classList.remove('selected');
+                }
+            });
+            
+            // Calculate case discount
+            const totalCases = orderItems.reduce((sum, item) => sum + item.quantity, 0);
+            let caseDiscount = 0.25;
+            if (totalCases >= 4) caseDiscount = 0.40;
+            else if (totalCases >= 3) caseDiscount = 0.35;
+            else if (totalCases >= 2) caseDiscount = 0.30;
+            
+            // Calculate bulk discount
+            const bulkDiscount = getBulkDiscount(totalBulkLbs);
+            
+            const caseDiscountAmount = subtotal * caseDiscount;
+            const bulkDiscountAmount = bulkSubtotal * bulkDiscount;
+            const totalDiscount = caseDiscountAmount + bulkDiscountAmount;
+            const shipping = deliveryInfo.freeDelivery ? 0 : 0;
+            const total = subtotal + bulkSubtotal - totalDiscount + shipping;
+            
+            // Build discount text
+            let discountText = '';
+            if (totalCases > 0 && totalBulkLbs > 0) {
+                discountText = `Cases: ${(caseDiscount * 100).toFixed(0)}% | Bulk: ${(bulkDiscount * 100).toFixed(0)}%`;
+            } else if (totalBulkLbs > 0) {
+                discountText = `${(bulkDiscount * 100).toFixed(0)}% Bulk Discount`;
+            } else {
+                discountText = `${(caseDiscount * 100).toFixed(0)}%`;
+            }
+            
+            // Update UI
+            const grandSubtotal = subtotal + bulkSubtotal;
+            document.getElementById('subtotal').textContent = `$${grandSubtotal.toFixed(2)}`;
+            document.getElementById('discount-percent').textContent = discountText;
+            document.getElementById('discount-amount').textContent = `-$${totalDiscount.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+            
+            // Render order items
+            const itemsContainer = document.getElementById('order-items');
+            const allItems = [...orderItems, ...bulkItems];
+            if (allItems.length > 0) {
+                itemsContainer.innerHTML = allItems.map(item => `
+                    <div class="summary-item">
+                        <span>${item.name} (${item.size === 'bulk' ? 'Bulk' : item.size}) x${item.quantity}${item.size === 'bulk' ? ' lbs' : ''}</span>
+                        <span>$${item.total.toFixed(2)}</span>
+                    </div>
+                `).join('');
+                
+                // Add bulk discount tier info if applicable
+                if (totalBulkLbs > 0) {
+                    const nextTier = totalBulkLbs < 2 ? 2 : totalBulkLbs < 3 ? 3 : totalBulkLbs < 5 ? 5 : totalBulkLbs < 6 ? 6 : null;
+                    if (nextTier && bulkDiscount < 0.40) {
+                        const savings = bulkSubtotal * (getBulkDiscount(nextTier) - bulkDiscount);
+                        itemsContainer.innerHTML += `
+                            <div class="summary-item" style="color: var(--primary); font-style: italic;">
+                                <span>Add ${(nextTier - totalBulkLbs).toFixed(1)} more lbs to reach ${nextTier}+ lbs for ${getBulkDiscount(nextTier) * 100}% off!</span>
+                                <span>Save $${savings.toFixed(2)}</span>
+                            </div>
+                        `;
+                    }
+                }
+            } else {
+                itemsContainer.innerHTML = '<p style="color: #888; text-align: center; padding: 1rem;">Select products above to build your order</p>';
+            }
+        }
+        
+        async function submitOrder(e) {
+            e.preventDefault();
+            
+            if (orderItems.length === 0) {
+                alert('Please add at least one product to your order.');
+                return;
+            }
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="loading"></span> Submitting...';
+            
+            const orderData = {
+                customerInfo: {
+                    company: formData.get('company'),
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone')
+                },
+                shippingInfo: {
+                    address: formData.get('address'),
+                    city: formData.get('city'),
+                    state: formData.get('state'),
+                    zip: formData.get('zip')
+                },
+                billingInfo: {
+                    sameAsShipping: true
+                },
+                items: orderItems,
+                bulkItems: bulkItems,
+                totalBulkLbs: bulkItems.reduce((sum, item) => sum + item.quantity, 0),
+                notes: formData.get('notes'),
+                shipping: deliveryInfo.freeDelivery ? 0 : null
+            };
+            
+            try {
+                const response = await fetch(`${API_URL}/order-forms/${formCode}/submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to submit order');
+                }
+                
+                const result = await response.json();
+                
+                // Show success
+                document.getElementById('order-form-container').classList.add('hidden');
+                document.getElementById('success-state').classList.remove('hidden');
+                document.getElementById('order-number').textContent = result.order.orderNumber;
+                document.getElementById('confirmation-email').textContent = orderData.customerInfo.email;
+                
+            } catch (error) {
+                alert('Failed to submit order: ' + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Order';
+            }
+        }
+        
+        function showError(message) {
+            document.getElementById('error-state').classList.remove('hidden');
+            document.getElementById('order-form-container').classList.add('hidden');
+            document.getElementById('error-message').textContent = message;
+        }
+    </script>
+</body>
+</html>
